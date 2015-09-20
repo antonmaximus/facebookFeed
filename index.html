@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook Feed from Public Group</title>
+    <style>
+    .fbook-entry {
+      width: 100%;
+      padding: 4px 2px 2px 2px;
+      border-bottom: 1px solid #DDD;
+    }
+
+    .fbook-entry img {
+      width: 15%;
+    }
+
+    .fbook-entry div {
+      display: inline-block;
+      width: 80%;
+      vertical-align: top;
+    }
+
+    #target {
+      width: 400px;
+      height: 400px;
+      overflow: scroll;
+      border: 2px solid black;
+    }
+    </style>
+    <script id="biodata" type="text/html">
+        <div class = "fbook-entry">
+          <img src ='<%= picture %>' />
+          <div><span><%= message %></span></div>
+        </div>
+    </script> 
+    <script>
+// Simple JavaScript Templating
+// John Resig - http://ejohn.org/ - MIT Licensed
+(function(){
+  var cache = {};
+ 
+  this.tmpl = function tmpl(str, data){
+    // Figure out if we're getting a template, or if we need to
+    // load the template - and be sure to cache the result.
+    var fn = !/\W/.test(str) ?
+      cache[str] = cache[str] ||
+        tmpl(document.getElementById(str).innerHTML) :
+     
+      // Generate a reusable function that will serve as a template
+      // generator (and which will be cached).
+      new Function("obj",
+        "var p=[],print=function(){p.push.apply(p,arguments);};" +
+       
+        // Introduce the data as local variables using with(){}
+        "with(obj){p.push('" +
+       
+        // Convert the template into pure JavaScript
+        str
+          .replace(/[\r\t\n]/g, " ")
+          .split("<%").join("\t")
+          .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+          .replace(/\t=(.*?)%>/g, "',$1,'")
+          .split("\t").join("');")
+          .split("%>").join("p.push('")
+          .split("\r").join("\\'")
+      + "');}return p.join('');");
+   
+    // Provide some basic currying to the user
+    return data ? fn( data ) : fn;
+  };
+})();
+
+    </script>
+
+</head>
+
+<body>
+
+<h1>Facebook Feed from Public Group</h1>
+<div id="target"></div>
+
+<script>
+ 
+
+var appId = '1623141104601885';
+var appSecret = 'ddca26203327f87caad4d83f3e20a73c';
+var accessToken = '1623141104601885|AuxMCpu__uthIK44_UTEgZ2-aNU';
+
+var groupName = 'wikipedia';
+var requestJson = 'https://graph.facebook.com/v2.4/' + groupName + '/feed?access_token=' + accessToken + '&fields=id,picture,message,link,icon';
+
+
+
+function loadXMLDoc() {
+    var xmlhttp = new XMLHttpRequest();
+    var url = requestJson;
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+            if (xmlhttp.status == 200) {
+                iterateJson(xmlhttp.responseText);
+                // console.log(xmlhttp.responseText);
+            } else if (xmlhttp.status == 400) {
+                console.log('There was an error 400');
+            } else {
+                console.log('something else other than 200 was returned');
+            }
+        }
+    };
+
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+};
+
+loadXMLDoc();
+
+
+function iterateJson (datax) {
+  var arr = JSON.parse(datax).data;
+
+  console.log(arr.length);
+
+  var hmtlString = '';
+  for(var i=0; i<arr.length; i++) {
+    hmtlString += loadData(arr[i]);
+  }
+
+  document.querySelector("#target").innerHTML = hmtlString;
+}
+
+
+function loadData(data) {
+    data = { picture:  data.picture || '',
+             message: data.message || '',
+           }
+    var s = document.querySelector("#biodata").innerHTML;
+    var s1 = tmpl(s, data);
+
+    return s1; 
+    
+}
+
+</script>
+
+
+
+<div class="fb-page" data-href="https://www.facebook.com/100893736659527" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" data-show-posts="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/100893736659527"><a href="https://www.facebook.com/100893736659527">Facebook</a></blockquote></div></div>
+
+<div class="fb-page" data-href="https://www.facebook.com/jettest23" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" data-show-posts="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/jettest23"><a href="https://www.facebook.com/jettest23">Facebook</a></blockquote></div></div>
+
+
+https://graph.facebook.com/oauth/access_token?client_id=1623141104601885&client_secret=ddca26203327f87caad4d83f3e20a73c&grant_type=client_credentials
+
+
+https://graph.facebook.com/lapamilya/feed?limit=1&locale=en_GB&access_token=1623141104601885|AuxMCpu__uthIK44_UTEgZ2-aNU&fields=id,from,message,link,caption,icons,actions,privacy,status_type
+
+
+access_token=1623141104601885|AuxMCpu__uthIK44_UTEgZ2-aNU
+
+
+https://graph.facebook.com/v2.2/lapamilya/feed?access_token=1623141104601885|AuxMCpu__uthIK44_UTEgZ2-aNU
+
+
+
+[9/18/15, 1:45:35 PM] Jason Gordon: appid: 279915592145003
+[9/18/15, 1:45:54 PM] Jason Gordon: secret: 3ba4b790bb2369d900007701eef811b1
+
+https://graph.facebook.com/oauth/access_token?client_id=279915592145003&client_secret=3ba4b790bb2369d900007701eef811b1&grant_type=client_credentials
+access_token=279915592145003|EzrYJeGR2WzRgpjf4hjYlaMv-yY
+
+Jettest23:
+https://graph.facebook.com/v2.2/809141112516766/feed?access_token=279915592145003|EzrYJeGR2WzRgpjf4hjYlaMv-yY
+
+Flite:
+https://graph.facebook.com/v2.4/100893736659527/feed?access_token=279915592145003|EzrYJeGR2WzRgpjf4hjYlaMv-yY
+
+
+=============
+Jett1:
+appid: 1623141104601885
+secret: ddca26203327f87caad4d83f3e20a73c
+access_token: 
+https://graph.facebook.com/oauth/access_token?client_id=1623141104601885&client_secret=ddca26203327f87caad4d83f3e20a73c&grant_type=client_credentials
+access_token=1623141104601885|AuxMCpu__uthIK44_UTEgZ2-aNU
+
+Jettest23:809141112516766
+https://graph.facebook.com/v2.2/Jettest23/feed?access_token=1623141104601885|AuxMCpu__uthIK44_UTEgZ2-aNU
+
+Flite:100893736659527
+https://graph.facebook.com/v2.4/Flite/feed?access_token=1623141104601885|AuxMCpu__uthIK44_UTEgZ2-aNU
+
+http://facebook.com/100893736659527/posts/876911945724365
+
+http://www.facebook.com/permalink.php?id=100893736659527&v=wall&story_fbid=876911945724365
+http://www.facebook.com/876911945724365
+
+
+<!-- 
+
+<div
+  class="fb-like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="true">
+</div> -->
+
+</body>
+
+</html>
